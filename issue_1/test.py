@@ -50,14 +50,14 @@ model_wrapper_cu.compile(
 print("\n_________________________________________________________________")
 print("Train using Levenberg-Marquardt")
 t1_start = time.perf_counter()
-model_wrapper.fit(train_dataset, epochs=100)
+model_wrapper.fit(train_dataset, epochs=10)
 t1_stop = time.perf_counter()
 print("Elapsed time: ", t1_stop - t1_start)
 
 print("\n_________________________________________________________________")
 print("Train using Levenberg-Marquardt Cunumeric")
 t2_start = time.perf_counter()
-model_wrapper_cu.fit(train_dataset, epochs=100)
+model_wrapper_cu.fit(train_dataset, epochs=10)
 t2_stop = time.perf_counter()
 print("Elapsed time: ", t2_stop - t2_start)
 
