@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import legate.timing
 import levenberg_marquardt_cu as lm_cu
 import levenberg_marquardt as lm
 
@@ -38,7 +39,7 @@ model_wrapper.compile(
     solve_method='qr',
     jacobian_max_num_rows=20000)
 
-model_wrapper_cu = lm.ModelWrapper(
+model_wrapper_cu = lm_cu.ModelWrapper(
     tf.keras.models.clone_model(model))
 
 model_wrapper_cu.compile(
@@ -56,10 +57,10 @@ print("Elapsed time: ", t1_stop - t1_start)
 
 print("\n_________________________________________________________________")
 print("Train using Levenberg-Marquardt Cunumeric")
-t2_start = time.perf_counter()
+t2_start = legate.timing.time()
 model_wrapper_cu.fit(train_dataset, epochs=10)
-t2_stop = time.perf_counter()
-print("Elapsed time: ", t2_stop - t2_start)
+t2_stop = legate.timing.time()
+print("Elapsed time: ", (t2_stop - t2_start) / 1e6)
 
 print("\n_________________________________________________________________")
 print("Plot results")
@@ -67,4 +68,4 @@ plt.plot(x_train, y_train, 'b-', label="reference")
 plt.plot(x_train, model_wrapper.predict(x_train), 'g--', label="lm")
 plt.plot(x_train, model_wrapper_cu.predict(x_train), 'r--', label="lm_cu")
 plt.legend()
-plt.show()
+plt.savefig('result.png')
